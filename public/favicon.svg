@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#FBF6EC"/>
+  <path d="M32 54C18 44 8 36 8 24a13 13 0 0 1 24-7 13 13 0 0 1 24 7c0 12-10 20-24 30Z" fill="#E11D29" stroke="#1A1208" stroke-width="2.5" stroke-linejoin="round"/>
+  <text x="32" y="38" font-family="Anton, sans-serif" font-size="22" fill="#FBF6EC" text-anchor="middle" font-weight="700">MC</text>
+</svg>
