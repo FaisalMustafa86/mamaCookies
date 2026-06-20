@@ -83,7 +83,7 @@ export const products: SeedProduct[] = [
       "Roasted hazelnuts and silky milk chocolate folded into a brown-butter dough. Nutty, creamy and impossibly moreish.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
   {
     id: "p-double",
@@ -96,7 +96,7 @@ export const products: SeedProduct[] = [
       "For the serious chocolate lover — a deep cocoa cookie packed with melting chocolate chunks and fudgy all the way through.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
   {
     id: "p-chunky-peanut-butter",
@@ -124,7 +124,7 @@ export const products: SeedProduct[] = [
       "A fudgy dark-chocolate brownie in cookie form, studded with toasted walnuts. Crackly on top, molten in the middle.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
   {
     id: "p-bigblack",
@@ -137,7 +137,7 @@ export const products: SeedProduct[] = [
       "Our jet-black cookies-and-cream legend — a dark cocoa cookie loaded with crushed cream biscuits and pockets of melting white chocolate.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
   {
     id: "p-lotus-love",
@@ -150,7 +150,7 @@ export const products: SeedProduct[] = [
       "Creamy white chocolate, caramelised Lotus Biscoff spread and that iconic crunch. After 100+ test batches, the one that made the whole team go quiet.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
 
   // ---------------- Premium (Rs 450) ----------------
@@ -165,7 +165,7 @@ export const products: SeedProduct[] = [
       "Toasted marshmallow, molten milk chocolate and a buttery cookie base — a campfire s'more in cookie form. Gooey, smoky-sweet and impossible to put down.",
     inStock: true,
     featured: true,
-    tags: ["bestseller"],
+    tags: [],
   },
   {
     id: "p-velvet-crush",
@@ -178,7 +178,7 @@ export const products: SeedProduct[] = [
       "A deep red-velvet cookie with a molten cream-cheese centre. Rich, striking and unapologetically indulgent — made for loved ones.",
     inStock: true,
     featured: true,
-    tags: ["bestseller", "for loved ones"],
+    tags: ["for loved ones"],
   },
   {
     id: "p-chocochee",
