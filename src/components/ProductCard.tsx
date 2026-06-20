@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Plus } from "lucide-react";
 import type { Product } from "../data/types";
-import { discountedPrice, formatCurrency } from "../lib/format";
+import { boxPrice, discountedPrice, formatCurrency } from "../lib/format";
 import { useData } from "../data/DataContext";
 import { useToast } from "./Toast";
 import ProductImage from "./ProductImage";
@@ -11,14 +11,16 @@ export default function ProductCard({ product }: { product: Product }) {
   const { addToCart } = useData();
   const toast = useToast();
 
-  const finalPrice = discountedPrice(product.price, product.discountPercent);
-  const hasDiscount = !!product.discountPercent;
+  // Cookies are sold by the box — the card shows the entry price (Box of 4) and
+  // quick-add drops a Box of 4 in the cart. Pick a size on the product page.
+  const unitPrice = discountedPrice(product.price, product.discountPercent);
+  const entryPrice = boxPrice(unitPrice, 4);
 
   function handleAdd(e: React.MouseEvent) {
     e.preventDefault();
     if (!product.inStock) return;
-    addToCart(product.id);
-    toast(`${product.name} added to your box`);
+    addToCart(product.id, 4);
+    toast(`Box of 4 of ${product.name} added to your box`);
   }
 
   return (
@@ -39,7 +41,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         {/* badges */}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
-          {hasDiscount && (
+          {!!product.discountPercent && (
             <span className="rounded-full bg-brand-red px-2.5 py-1 text-xs font-bold text-cream">
               {product.discountPercent}% off
             </span>
@@ -71,18 +73,14 @@ export default function ProductCard({ product }: { product: Product }) {
             {product.name}
           </h3>
         </Link>
-        <p className="text-sm text-muted">{product.unit}</p>
+        <p className="text-sm text-muted">From a Box of 4</p>
 
         <div className="mt-3 flex items-end justify-between gap-2">
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-xs text-muted">from</span>
             <span className="font-heading text-xl font-bold text-brand-ink">
-              {formatCurrency(finalPrice)}
+              {formatCurrency(entryPrice)}
             </span>
-            {hasDiscount && (
-              <span className="text-sm text-muted line-through">
-                {formatCurrency(product.price)}
-              </span>
-            )}
           </div>
 
           <button

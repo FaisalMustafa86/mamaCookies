@@ -23,7 +23,7 @@ export default function ProductDetail() {
     useData();
   const toast = useToast();
   const [qty, setQty] = useState(1);
-  const [size, setSize] = useState<BoxSize>(1);
+  const [size, setSize] = useState<BoxSize>(4);
 
   const product = id ? getProduct(id) : undefined;
 
@@ -110,11 +110,6 @@ export default function ProductDetail() {
             <span className="font-heading text-3xl font-bold text-brand-red">
               {formatCurrency(linePrice)}
             </span>
-            {size === 1 && product.discountPercent && (
-              <span className="text-lg text-muted line-through">
-                {formatCurrency(product.price)}
-              </span>
-            )}
             <span className="text-muted">/ {boxLabel(size)}</span>
           </div>
 
@@ -135,7 +130,7 @@ export default function ProductDetail() {
           {/* box size */}
           <div className="mt-7">
             <span className="label">Choose your size</span>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {BOX_SIZES.map((s) => {
                 const active = size === s;
                 const save = BOX_DISCOUNT[s];

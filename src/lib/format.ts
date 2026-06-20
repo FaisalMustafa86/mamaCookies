@@ -22,7 +22,8 @@ export function discountedPrice(price: number, discountPercent?: number): number
 // ---------------------------------------------------------------------------
 export type BoxSize = 1 | 4 | 8;
 
-export const BOX_SIZES: BoxSize[] = [1, 4, 8];
+// Purchasable box sizes (single cookies are not sold on their own).
+export const BOX_SIZES: BoxSize[] = [4, 8];
 
 /** Bundle discount (%) per box size. */
 export const BOX_DISCOUNT: Record<BoxSize, number> = { 1: 0, 4: 8, 8: 12 };
