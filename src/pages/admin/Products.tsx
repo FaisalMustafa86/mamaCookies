@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Pencil, Plus, Search, Star, Trash2 } from "lucide-react";
+import { Pencil, Search, Star, Trash2 } from "lucide-react";
 import { useData } from "../../data/DataContext";
 import { useToast } from "../../components/Toast";
 import ProductForm, {
@@ -10,20 +10,13 @@ import { formatCurrency } from "../../lib/format";
 import type { Product } from "../../data/types";
 
 export default function AdminProducts() {
-  const {
-    products,
-    categories,
-    addProduct,
-    updateProduct,
-    deleteProduct,
-    getCategory,
-  } = useData();
+  const { products, categories, updateProduct, deleteProduct, getCategory } =
+    useData();
   const toast = useToast();
 
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [editing, setEditing] = useState<Product | null>(null);
-  const [adding, setAdding] = useState(false);
 
   const filtered = useMemo(
     () =>
@@ -38,15 +31,10 @@ export default function AdminProducts() {
   );
 
   function handleSave(draft: ProductDraft) {
-    if (editing) {
-      updateProduct(editing.id, draft);
-      toast(`${draft.name} updated`);
-    } else {
-      addProduct(draft);
-      toast(`${draft.name} added`);
-    }
+    if (!editing) return;
+    updateProduct(editing.id, draft);
+    toast(`${draft.name} updated`);
     setEditing(null);
-    setAdding(false);
   }
 
   function handleDelete(p: Product) {
@@ -86,9 +74,6 @@ export default function AdminProducts() {
             ))}
           </select>
         </div>
-        <button onClick={() => setAdding(true)} className="btn-primary">
-          <Plus size={18} /> Add cookie
-        </button>
       </div>
 
       {/* table */}
@@ -199,15 +184,12 @@ export default function AdminProducts() {
         )}
       </div>
 
-      {(adding || editing) && (
+      {editing && (
         <ProductForm
-          initial={editing ?? undefined}
+          initial={editing}
           categories={categories}
           onSave={handleSave}
-          onClose={() => {
-            setEditing(null);
-            setAdding(false);
-          }}
+          onClose={() => setEditing(null)}
         />
       )}
     </div>

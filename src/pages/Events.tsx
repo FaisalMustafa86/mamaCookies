@@ -50,8 +50,8 @@ export default function Events() {
             </div>
           </div>
           <img
-            src="/images/rack.jpeg"
-            alt="A rack of freshly baked Mama's Cookies for an event"
+            src="/images/cups.jpeg"
+            alt="Branded 'For Loved Ones' cups at a Mama's Cookies event stall"
             className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-soft"
           />
         </div>

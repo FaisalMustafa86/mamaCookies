@@ -4,6 +4,17 @@
 
 export const PORT = Number(process.env.PORT ?? 3001);
 
+// Database (libSQL / Turso). Local dev defaults to an embedded file; production
+// points at a Turso cloud database. On Vercel without Turso configured we fall
+// back to an in-memory DB (ephemeral — it reseeds on every cold start) so the
+// site still works before you wire up persistence.
+export const DB_URL =
+  process.env.TURSO_DATABASE_URL ??
+  process.env.DB_URL ??
+  (process.env.VERCEL ? ":memory:" : "file:./data.sqlite");
+export const DB_AUTH_TOKEN =
+  process.env.TURSO_AUTH_TOKEN ?? process.env.DB_AUTH_TOKEN ?? "";
+
 // Order economics (PKR). Mirror these in src/lib/brand.ts for the storefront.
 export const DELIVERY_FEE = Number(process.env.DELIVERY_FEE ?? 150);
 export const FREE_DELIVERY_OVER = Number(

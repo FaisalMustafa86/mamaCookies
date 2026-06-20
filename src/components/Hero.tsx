@@ -15,7 +15,7 @@ import { useEffect, useRef } from "react";
 const FLOATERS = [
   { src: "/images/chocochee.jpeg", x: "6%", y: "4%", size: 96, delay: 0, depth: 28 },
   { src: "/images/classic.jpeg", x: "64%", y: "-2%", size: 84, delay: 0.4, depth: 18 },
-  { src: "/images/lotuslove.jpeg", x: "76%", y: "46%", size: 104, delay: 0.8, depth: 34 },
+  { src: "/images/lotus.jpeg", x: "76%", y: "46%", size: 104, delay: 0.8, depth: 34 },
   { src: "/images/double.jpeg", x: "-2%", y: "56%", size: 78, delay: 1.2, depth: 22 },
   { src: "/images/hazelnut.jpeg", x: "42%", y: "74%", size: 70, delay: 0.6, depth: 14 },
 ];
@@ -164,11 +164,12 @@ export default function Hero() {
           >
             {Array.from({ length: 2 }).map((_, k) => (
               <span key={k} className="flex items-center gap-8">
-                <span>Classic Chocolate Chunk</span><Dot />
-                <span>Red Royale</span><Dot />
-                <span>Lotus Biscoff</span><Dot />
-                <span>MisterMellow</span><Dot />
-                <span>Walnut Brownie</span><Dot />
+                <span>Classic</span><Dot />
+                <span>Velvet Crush</span><Dot />
+                <span>Lotus Love</span><Dot />
+                <span>Mr. Mellow</span><Dot />
+                <span>BigBlack</span><Dot />
+                <span>ChocoChee</span><Dot />
                 <span>For loved ones</span><Dot />
               </span>
             ))}
@@ -201,8 +202,8 @@ function HeroBox({ sx, sy, reduce }: ParallaxProps) {
       className="absolute inset-[12%] overflow-hidden rounded-[2.5rem] border-4 border-white bg-white shadow-lift"
     >
       <img
-        src="/images/box-trio.jpeg"
-        alt="A red Mama's Cookies box beside a stack of cookies"
+        src="/images/box-hand.jpeg"
+        alt="A hand holding a Mama's Cookies gift box"
         className="h-full w-full object-cover"
       />
     </motion.div>

@@ -10,9 +10,9 @@ export const BRAND = {
   deliveryFee: 150, // PKR — same-day delivery
   freeDeliveryOver: 3000, // PKR
   contact: {
-    phone: "+92 300 0012345",
-    whatsapp: "+92 300 0012345",
-    email: "hello@mamascookies.pk",
+    phone: "+92 326 5577745",
+    whatsapp: "+92 326 5577745",
+    email: "mamascookie.pk@gmail.com",
     area: "DHA Phase 2, Rawalpindi–Islamabad",
     address: "DHA Phase 2, Rawalpindi–Islamabad, Pakistan",
   },
@@ -21,9 +21,8 @@ export const BRAND = {
     weekend: "Sat–Sun · 1pm – 12am",
   },
   social: {
-    instagram: "https://instagram.com/",
-    tiktok: "https://tiktok.com/",
-    facebook: "https://facebook.com/",
+    instagram:
+      "https://www.instagram.com/mamascookie.pk?igsh=cWV2aWdvZW95eHJ1",
   },
   stats: [
     { label: "Cookies baked", value: 20000, suffix: "+" },

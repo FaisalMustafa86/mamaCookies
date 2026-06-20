@@ -112,16 +112,20 @@ export default function Delivery() {
               </p>
             </div>
           </Link>
-          <div className="flex items-center gap-4 rounded-3xl border border-dashed border-brand-ink/20 bg-blush-light/50 p-6">
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-ink/5 text-brand-ink">
+          <div className="flex items-center gap-4 rounded-3xl border border-brand-red/30 bg-blush-light/50 p-6">
+            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-red/10 text-brand-red">
               <Globe size={24} />
             </span>
             <div>
               <h3 className="font-heading text-lg font-bold text-brand-ink">
-                Nationwide Shipping <span className="chip ml-1">Coming soon</span>
+                Nationwide Shipping{" "}
+                <span className="chip ml-1 bg-brand-red/10 text-brand-red">
+                  Now available
+                </span>
               </h3>
               <p className="text-sm text-muted">
-                Cookies shipped across Pakistan — we're almost there.
+                Cookies shipped across Pakistan — order from anywhere in the
+                country.
               </p>
             </div>
           </div>

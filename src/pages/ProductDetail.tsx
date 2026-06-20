@@ -4,7 +4,15 @@ import { ArrowLeft, Check, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { useData } from "../data/DataContext";
 import { useToast } from "../components/Toast";
-import { discountedPrice, formatCurrency } from "../lib/format";
+import {
+  BOX_DISCOUNT,
+  BOX_SIZES,
+  boxLabel,
+  boxPrice,
+  discountedPrice,
+  formatCurrency,
+  type BoxSize,
+} from "../lib/format";
 import ProductCard from "../components/ProductCard";
 import ProductImage from "../components/ProductImage";
 
@@ -15,6 +23,7 @@ export default function ProductDetail() {
     useData();
   const toast = useToast();
   const [qty, setQty] = useState(1);
+  const [size, setSize] = useState<BoxSize>(1);
 
   const product = id ? getProduct(id) : undefined;
 
@@ -43,15 +52,17 @@ export default function ProductDetail() {
   }
 
   const category = getCategory(product.categoryId);
-  const finalPrice = discountedPrice(product.price, product.discountPercent);
+  const unitPrice = discountedPrice(product.price, product.discountPercent);
+  const linePrice = boxPrice(unitPrice, size);
   const related = products
     .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
     .slice(0, 4);
 
   function handleAdd() {
     if (!product) return;
-    addToCart(product.id, qty);
-    toast(`${qty} × ${product.name} added to your box`);
+    addToCart(product.id, size, qty);
+    const what = size === 1 ? product.name : `${boxLabel(size)} of ${product.name}`;
+    toast(`${qty} × ${what} added to your box`);
   }
 
   return (
@@ -97,14 +108,14 @@ export default function ProductDetail() {
 
           <div className="mt-4 flex items-baseline gap-3">
             <span className="font-heading text-3xl font-bold text-brand-red">
-              {formatCurrency(finalPrice)}
+              {formatCurrency(linePrice)}
             </span>
-            {product.discountPercent && (
+            {size === 1 && product.discountPercent && (
               <span className="text-lg text-muted line-through">
                 {formatCurrency(product.price)}
               </span>
             )}
-            <span className="text-muted">/ {product.unit}</span>
+            <span className="text-muted">/ {boxLabel(size)}</span>
           </div>
 
           <p className="mt-5 leading-relaxed text-muted">{product.description}</p>
@@ -119,6 +130,45 @@ export default function ProductDetail() {
                 Currently sold out
               </span>
             )}
+          </div>
+
+          {/* box size */}
+          <div className="mt-7">
+            <span className="label">Choose your size</span>
+            <div className="grid grid-cols-3 gap-2">
+              {BOX_SIZES.map((s) => {
+                const active = size === s;
+                const save = BOX_DISCOUNT[s];
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSize(s)}
+                    className={`flex flex-col items-center rounded-2xl border-2 px-3 py-3 text-center transition-colors ${
+                      active
+                        ? "border-brand-red bg-brand-red/10"
+                        : "border-brand-ink/15 bg-white hover:border-brand-red/40"
+                    }`}
+                  >
+                    <span
+                      className={`font-heading text-sm font-bold ${
+                        active ? "text-brand-red" : "text-brand-ink"
+                      }`}
+                    >
+                      {boxLabel(s)}
+                    </span>
+                    <span className="mt-0.5 text-sm font-semibold text-brand-ink">
+                      {formatCurrency(boxPrice(unitPrice, s))}
+                    </span>
+                    {save > 0 && (
+                      <span className="mt-0.5 text-[11px] font-bold text-brand-red">
+                        save {save}%
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
           {/* qty + add */}

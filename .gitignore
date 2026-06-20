@@ -1,0 +1,14 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.vite
+.vercel
+
+# server / database
+.env
+data.sqlite
+data.sqlite-shm
+data.sqlite-wal
+*.tsbuildinfo

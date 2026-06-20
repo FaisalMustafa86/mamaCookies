@@ -14,17 +14,22 @@ import type {
   PaymentMethod,
 } from "../data/types";
 
-const TOKEN_KEY = "mamas-cookies:token";
+// Auth is now carried by an HttpOnly session cookie set by the server — JS can't
+// read it (XSS-resistant). A readable CSRF cookie is echoed back in a header on
+// every state-changing request (double-submit CSRF defense).
+const CSRF_COOKIE = "mc_csrf";
 
-export function getToken(): string | null {
-  if (typeof sessionStorage === "undefined") return null;
-  return sessionStorage.getItem(TOKEN_KEY);
+function readCookie(name: string): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(
+    new RegExp("(?:^|; )" + name + "=([^;]*)"),
+  );
+  return match ? decodeURIComponent(match[1]) : null;
 }
-export function setToken(token: string): void {
-  sessionStorage.setItem(TOKEN_KEY, token);
-}
-export function clearToken(): void {
-  sessionStorage.removeItem(TOKEN_KEY);
+
+/** True if a (non-expired-by-cookie) admin session marker is present. */
+export function hasSession(): boolean {
+  return readCookie(CSRF_COOKIE) !== null;
 }
 
 type Opts = { method?: string; body?: unknown; auth?: boolean };
@@ -32,13 +37,16 @@ type Opts = { method?: string; body?: unknown; auth?: boolean };
 async function request<T>(path: string, opts: Opts = {}): Promise<T> {
   const headers: Record<string, string> = {};
   if (opts.body !== undefined) headers["content-type"] = "application/json";
-  if (opts.auth) {
-    const token = getToken();
-    if (token) headers.authorization = `Bearer ${token}`;
+  const method = opts.method ?? "GET";
+  // Attach the CSRF header on state-changing requests.
+  if (method !== "GET" && method !== "HEAD") {
+    const csrf = readCookie(CSRF_COOKIE);
+    if (csrf) headers["x-csrf-token"] = csrf;
   }
   const res = await fetch(`/api${path}`, {
-    method: opts.method ?? "GET",
+    method,
     headers,
+    credentials: "same-origin", // send/receive the session + CSRF cookies
     body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
   });
   if (!res.ok) {
@@ -87,10 +95,11 @@ export const api = {
 
   // ---- Admin auth ----
   login: (username: string, password: string) =>
-    request<{ token: string }>("/auth/login", {
+    request<{ ok: true; csrf: string }>("/auth/login", {
       method: "POST",
       body: { username, password },
     }),
+  logout: () => request<{ ok: true }>("/auth/logout", { method: "POST" }),
 
   // ---- Admin ----
   adminOrders: () => request<Order[]>("/admin/orders", { auth: true }),

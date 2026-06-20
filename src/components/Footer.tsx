@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
+import { Instagram, Mail, MapPin, MessageCircle, Clock } from "lucide-react";
 import { Logo } from "./Logo";
 import { BRAND, whatsappLink } from "../lib/brand";
 
 const USEFUL = [
   { label: "Shop Cookies", to: "/shop" },
+  { label: "Nationwide Shipping", to: "/shipping" },
   { label: "Same Day Delivery / Pickup", to: "/delivery" },
   { label: "Corporate Gifting", to: "/corporate" },
   { label: "Events & Catering", to: "/events" },
@@ -18,21 +19,6 @@ const POLICIES = [
   { label: "Privacy Policy", slug: "privacy" },
   { label: "Terms of Service", slug: "terms" },
 ];
-
-// lucide has no TikTok brand glyph — small inline SVG.
-function TikTok({ size = 18 }: { size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M16.5 3c.3 2.1 1.6 3.6 3.5 3.9V10c-1.4 0-2.7-.4-3.8-1.1v5.9c0 3.3-2.7 5.9-6 5.9S4.2 18 4.2 14.7c0-3.1 2.4-5.7 5.5-5.9v3.2c-1.3.2-2.3 1.3-2.3 2.7 0 1.5 1.2 2.7 2.7 2.7s2.7-1.2 2.7-2.7V3h3.7z" />
-    </svg>
-  );
-}
 
 export default function Footer() {
   return (
@@ -53,24 +39,6 @@ export default function Footer() {
               className="grid h-10 w-10 place-items-center rounded-full bg-blush-light text-brand-red transition-colors hover:bg-brand-red hover:text-cream"
             >
               <Instagram size={18} />
-            </a>
-            <a
-              href={BRAND.social.tiktok}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="TikTok"
-              className="grid h-10 w-10 place-items-center rounded-full bg-blush-light text-brand-red transition-colors hover:bg-brand-red hover:text-cream"
-            >
-              <TikTok size={18} />
-            </a>
-            <a
-              href={BRAND.social.facebook}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Facebook"
-              className="grid h-10 w-10 place-items-center rounded-full bg-blush-light text-brand-red transition-colors hover:bg-brand-red hover:text-cream"
-            >
-              <Facebook size={18} />
             </a>
           </div>
         </div>

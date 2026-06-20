@@ -31,8 +31,8 @@ export default function AdminLayout() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  function handleLogout() {
-    logout();
+  async function handleLogout() {
+    await logout();
     navigate("/admin/login");
   }
 

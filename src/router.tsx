@@ -7,6 +7,7 @@ import Cart from "./pages/Cart";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Delivery from "./pages/Delivery";
+import Shipping from "./pages/Shipping";
 import Corporate from "./pages/Corporate";
 import Events from "./pages/Events";
 import Account from "./pages/Account";
@@ -32,6 +33,7 @@ export const router = createBrowserRouter([
       { path: "product/:id", element: <ProductDetail /> },
       { path: "cart", element: <Cart /> },
       { path: "delivery", element: <Delivery /> },
+      { path: "shipping", element: <Shipping /> },
       { path: "corporate", element: <Corporate /> },
       { path: "events", element: <Events /> },
       { path: "about", element: <About /> },

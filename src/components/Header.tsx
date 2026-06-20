@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
@@ -7,7 +8,8 @@ import { useData } from "../data/DataContext";
 
 const NAV = [
   { to: "/shop", label: "Shop Cookies" },
-  { to: "/delivery", label: "Delivery / Pickup" },
+  { to: "/shipping", label: "Nationwide Shipping" },
+  { to: "/delivery", label: "Same-Day Delivery / Pickup" },
   { to: "/corporate", label: "Corporate Gifting" },
   { to: "/events", label: "Events & Catering" },
   { to: "/about", label: "Our Story" },
@@ -145,7 +147,7 @@ export default function Header() {
                   ref={searchRef}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search cookies — Lotus, Red Royale, boxes…"
+                  placeholder="Search cookies — Classic, Lotus, Velvet Crush…"
                   aria-label="Search cookies"
                   className="input pl-11"
                 />
@@ -155,24 +157,28 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile slide-in menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <>
-            <motion.div
-              className="fixed inset-0 z-50 bg-brand-ink/40 lg:hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMenuOpen(false)}
-            />
-            <motion.aside
-              className="fixed right-0 top-0 z-50 flex h-full w-72 max-w-[80%] flex-col bg-cream p-6 shadow-lift lg:hidden"
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
-            >
+      {/* Mobile slide-in menu — portaled to <body> so the header's
+          backdrop-blur (a backdrop-filter) doesn't trap these fixed elements
+          in the header's containing block once the page is scrolled. */}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <AnimatePresence>
+            {menuOpen && (
+              <>
+                <motion.div
+                  className="fixed inset-0 z-[60] bg-brand-ink/40 lg:hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setMenuOpen(false)}
+                />
+                <motion.aside
+                  className="fixed right-0 top-0 z-[60] flex h-full w-72 max-w-[80%] flex-col bg-cream p-6 shadow-lift lg:hidden"
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+                >
               <div className="mb-8 flex items-center justify-between">
                 <span className="font-script text-xl text-brand-red">mama's</span>
                 <button
@@ -222,10 +228,12 @@ export default function Header() {
               >
                 Admin login
               </Link>
-            </motion.aside>
-          </>
+                </motion.aside>
+              </>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </header>
   );
 }

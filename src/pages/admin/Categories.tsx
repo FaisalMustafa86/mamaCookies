@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Pencil, Plus, Trash2, X } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 import { useData } from "../../data/DataContext";
 import { useToast } from "../../components/Toast";
 import { slugify } from "../../lib/slugify";
@@ -13,7 +13,6 @@ const EMPTY: Draft = { name: "", slug: "", icon: "🍪", description: "" };
 export default function AdminCategories() {
   const {
     categories,
-    addCategory,
     updateCategory,
     deleteCategory,
     countProductsInCategory,
@@ -23,12 +22,6 @@ export default function AdminCategories() {
   const [editing, setEditing] = useState<Category | null>(null);
   const [open, setOpen] = useState(false);
   const [draft, setDraft] = useState<Draft>(EMPTY);
-
-  function openAdd() {
-    setEditing(null);
-    setDraft(EMPTY);
-    setOpen(true);
-  }
 
   function openEdit(c: Category) {
     setEditing(c);
@@ -49,13 +42,9 @@ export default function AdminCategories() {
       icon: draft.icon.trim() || "🍪",
       description: draft.description.trim(),
     };
-    if (editing) {
-      updateCategory(editing.id, payload);
-      toast(`${payload.name} updated`);
-    } else {
-      addCategory(payload);
-      toast(`${payload.name} added`);
-    }
+    if (!editing) return;
+    updateCategory(editing.id, payload);
+    toast(`${payload.name} updated`);
     setOpen(false);
   }
 
@@ -75,12 +64,6 @@ export default function AdminCategories() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-end">
-        <button onClick={openAdd} className="btn-primary">
-          <Plus size={18} /> Add category
-        </button>
-      </div>
-
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {categories.map((c) => {
           const count = countProductsInCategory(c.id);

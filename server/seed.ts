@@ -1,10 +1,10 @@
 // ---------------------------------------------------------------------------
 // Seed catalog for Mama's Cookies — the source of truth for first-run data.
-// Written into SQLite on first boot. Admin edits persist in the DB after that.
+// Written into the DB on first boot. Admin edits persist after that.
 //
-// Images: cookies with a real photo point at /images/*.jpeg. New flavours that
-// don't have photography yet use an empty image string — the frontend renders a
-// branded placeholder tile for those until real photos are dropped in.
+// Menu + prices mirror the official Mama's Cookies price sheet (PKR):
+//   Originals 330 · Specials 380 · Premium 450.
+// Every cookie has a real product photo in /public/images.
 // ---------------------------------------------------------------------------
 
 export type SeedCategory = {
@@ -32,81 +32,68 @@ export type SeedProduct = {
 
 export const categories: SeedCategory[] = [
   {
-    id: "cat-signature",
-    name: "Signature Cookies",
-    slug: "signature",
+    id: "cat-originals",
+    name: "Originals",
+    slug: "originals",
     icon: "🍪",
-    description: "The legends our regulars keep coming back for.",
+    description: "The legends that started it all — Rs 330 each.",
     sort: 1,
   },
   {
-    id: "cat-specialty",
-    name: "Specialty Cookies",
-    slug: "specialty",
+    id: "cat-specials",
+    name: "Specials",
+    slug: "specials",
     icon: "⭐",
-    description: "Limited, loaded and a little extra — worth the hype.",
+    description: "Loaded, a little extra, worth the hype — Rs 380 each.",
     sort: 2,
   },
   {
-    id: "cat-boxes",
-    name: "Boxes & Gifting",
-    slug: "boxes",
-    icon: "🎁",
-    description: "Curated cookie boxes for sharing — and for loved ones.",
+    id: "cat-premium",
+    name: "Premium",
+    slug: "premium",
+    icon: "👑",
+    description: "Our most decadent, fully-loaded drops — Rs 450 each.",
     sort: 3,
   },
 ];
 
 export const products: SeedProduct[] = [
-  // ---------------- Best Sellers (homepage) ----------------
+  // ---------------- Originals (Rs 330) ----------------
   {
-    id: "p-classic-choc-chunk",
-    name: "Classic Chocolate Chunk",
-    categoryId: "cat-signature",
-    price: 450,
+    id: "p-classic",
+    name: "Classic",
+    categoryId: "cat-originals",
+    price: 330,
     unit: "1 cookie",
     image: "/images/classic.jpeg",
     description:
-      "The one that started it all. A buttery, golden-edged cookie packed with gooey dark and milk chocolate chunks. Big, soft-centred and ridiculously good — the benchmark every other cookie is measured against.",
+      "The one that started it all. A buttery, golden cookie loaded with gooey milk and dark chocolate chunks — soft in the middle, crisp at the edges. The benchmark every other cookie is measured against.",
     inStock: true,
     featured: true,
     tags: ["bestseller"],
   },
   {
-    id: "p-red-royale",
-    name: "Red Royale",
-    categoryId: "cat-specialty",
-    price: 520,
+    id: "p-hazelnut",
+    name: "Hazelnut",
+    categoryId: "cat-originals",
+    price: 330,
     unit: "1 cookie",
-    image: "",
+    image: "/images/hazelnut.jpeg",
     description:
-      "Our crown jewel. A deep red-velvet cookie with a molten cream-cheese centre and white chocolate chunks. Rich, regal and unapologetically decadent.",
+      "Roasted hazelnuts and silky milk chocolate folded into a brown-butter dough. Nutty, creamy and impossibly moreish.",
     inStock: true,
     featured: true,
     tags: ["bestseller"],
   },
   {
-    id: "p-mistermellow",
-    name: "MisterMellow",
-    categoryId: "cat-specialty",
-    price: 520,
+    id: "p-double",
+    name: "Double",
+    categoryId: "cat-originals",
+    price: 330,
     unit: "1 cookie",
-    image: "",
+    image: "/images/double.jpeg",
     description:
-      "Toasted marshmallow, molten milk chocolate and a buttery cookie base — layered like a campfire dream. Gooey, smoky-sweet and impossible to put down.",
-    inStock: true,
-    featured: true,
-    tags: ["bestseller"],
-  },
-  {
-    id: "p-walnut-brownie",
-    name: "Walnut Brownie Cookie",
-    categoryId: "cat-signature",
-    price: 500,
-    unit: "1 cookie",
-    image: "/images/double-walnut.jpeg",
-    description:
-      "A fudgy dark-cocoa brownie in cookie form, folded through with toasted walnuts. Crackly on top, molten in the middle, crunchy throughout.",
+      "For the serious chocolate lover — a deep cocoa cookie packed with melting chocolate chunks and fudgy all the way through.",
     inStock: true,
     featured: true,
     tags: ["bestseller"],
@@ -114,96 +101,97 @@ export const products: SeedProduct[] = [
   {
     id: "p-chunky-peanut-butter",
     name: "Chunky Peanut Butter",
-    categoryId: "cat-signature",
-    price: 480,
+    categoryId: "cat-originals",
+    price: 330,
     unit: "1 cookie",
-    image: "",
+    image: "/images/peanut-butter.jpeg",
     description:
-      "Loaded with real peanut butter and chunks of chocolate, with a salted finish. Soft, nutty and seriously addictive — the sweet-and-salty fix you didn't know you needed.",
+      "Loaded with real peanuts and a molten peanut-butter centre, finished with a touch of salt. Sweet, salty and seriously addictive.",
     inStock: true,
-    featured: true,
-    tags: ["bestseller"],
-  },
-  {
-    id: "p-lotus-biscoff",
-    name: "Lotus Biscoff",
-    categoryId: "cat-specialty",
-    price: 540,
-    unit: "1 cookie",
-    image: "/images/lotuslove.jpeg",
-    description:
-      "Creamy white chocolate, caramelised Biscoff spread and that iconic Lotus crunch. After 100+ test batches, this is the one that made the whole team go quiet.",
-    inStock: true,
-    featured: true,
-    tags: ["bestseller"],
-  },
-  {
-    id: "p-hazelnut-white-choc",
-    name: "Hazelnut White Chocolate",
-    categoryId: "cat-specialty",
-    price: 540,
-    unit: "1 cookie",
-    image: "/images/hazelnut.jpeg",
-    description:
-      "Roasted hazelnuts and silky white chocolate folded into a brown-butter dough. Nutty, creamy and luxurious — the cookie that tastes like a celebration.",
-    inStock: true,
-    featured: true,
-    tags: ["bestseller"],
-  },
-  {
-    id: "p-matcha-strawberry-cheesecake",
-    name: "Matcha Strawberry Cheesecake",
-    categoryId: "cat-specialty",
-    price: 560,
-    unit: "1 cookie",
-    image: "",
-    description:
-      "A stone-ground matcha cookie with a strawberry cheesecake heart. Earthy, fruity and creamy all at once — our most-requested limited drop.",
-    inStock: true,
-    featured: true,
-    tags: ["bestseller", "new"],
+    featured: false,
+    tags: [],
   },
 
-  // ---------------- Boxes & Gifting ----------------
+  // ---------------- Specials (Rs 380) ----------------
   {
-    id: "p-box-signature-6",
-    name: "Box of 6 — Signature",
-    categoryId: "cat-boxes",
-    price: 2600,
-    unit: "Box of 6",
-    image: "/images/box-trio.jpeg",
+    id: "p-walnut-brownie",
+    name: "Walnut Brownie",
+    categoryId: "cat-specials",
+    price: 380,
+    unit: "1 cookie",
+    image: "/images/walnut-brownie.jpeg",
     description:
-      "Six of our signature legends in the iconic red gift box. The perfect introduction to Mama's — and a guaranteed crowd-pleaser.",
-    inStock: true,
-    featured: false,
-    discountPercent: 8,
-    tags: ["best value"],
-  },
-  {
-    id: "p-box-mixed-6",
-    name: "The Mixed Box of 6",
-    categoryId: "cat-boxes",
-    price: 2800,
-    unit: "Box of 6",
-    image: "/images/assortment.jpeg",
-    description:
-      "Can't decide? Let Mama decide. A hand-picked mix of signatures and specialties from today's freshest batch — for loved ones, or just for you.",
+      "A fudgy dark-chocolate brownie in cookie form, studded with toasted walnuts. Crackly on top, molten in the middle.",
     inStock: true,
     featured: true,
-    tags: ["for loved ones"],
+    tags: ["bestseller"],
   },
   {
-    id: "p-box-corporate-12",
-    name: "Corporate Gift Box (12)",
-    categoryId: "cat-boxes",
-    price: 5400,
-    unit: "Box of 12",
-    image: "/images/gooey-stack.jpeg",
+    id: "p-bigblack",
+    name: "BigBlack",
+    categoryId: "cat-specials",
+    price: 380,
+    unit: "1 cookie",
+    image: "/images/bigblack.jpeg",
     description:
-      "A premium 12-cookie box, optionally branded with your company card. Built for teams, clients and offices who want to send something memorable.",
+      "Our jet-black cookies-and-cream legend — a dark cocoa cookie loaded with crushed cream biscuits and pockets of melting white chocolate.",
     inStock: true,
-    featured: false,
-    tags: ["corporate"],
+    featured: true,
+    tags: ["bestseller"],
+  },
+  {
+    id: "p-lotus-love",
+    name: "Lotus Love",
+    categoryId: "cat-specials",
+    price: 380,
+    unit: "1 cookie",
+    image: "/images/lotus.jpeg",
+    description:
+      "Creamy white chocolate, caramelised Lotus Biscoff spread and that iconic crunch. After 100+ test batches, the one that made the whole team go quiet.",
+    inStock: true,
+    featured: true,
+    tags: ["bestseller"],
+  },
+
+  // ---------------- Premium (Rs 450) ----------------
+  {
+    id: "p-mr-mellow",
+    name: "Mr. Mellow",
+    categoryId: "cat-premium",
+    price: 450,
+    unit: "1 cookie",
+    image: "/images/mr-mellow.jpeg",
+    description:
+      "Toasted marshmallow, molten milk chocolate and a buttery cookie base — a campfire s'more in cookie form. Gooey, smoky-sweet and impossible to put down.",
+    inStock: true,
+    featured: true,
+    tags: ["bestseller"],
+  },
+  {
+    id: "p-velvet-crush",
+    name: "Velvet Crush",
+    categoryId: "cat-premium",
+    price: 450,
+    unit: "1 cookie",
+    image: "/images/velvet-crush.jpeg",
+    description:
+      "A deep red-velvet cookie with a molten cream-cheese centre. Rich, striking and unapologetically indulgent — made for loved ones.",
+    inStock: true,
+    featured: true,
+    tags: ["bestseller", "for loved ones"],
+  },
+  {
+    id: "p-chocochee",
+    name: "ChocoChee",
+    categoryId: "cat-premium",
+    price: 450,
+    unit: "1 cookie",
+    image: "/images/chocochee.jpeg",
+    description:
+      "Our signature blue cookie with a tangy cream-cheese swirl and pops of melting chocolate. As fun to look at as it is to eat.",
+    inStock: true,
+    featured: true,
+    tags: ["new"],
   },
 ];
 
@@ -236,10 +224,10 @@ export const orders: SeedOrder[] = [
     paymentStatus: "paid",
     status: "delivered",
     items: [
-      { name: "Classic Chocolate Chunk", quantity: 2, price: 450 },
-      { name: "Red Royale", quantity: 1, price: 520 },
+      { name: "Classic", quantity: 2, price: 330 },
+      { name: "Velvet Crush", quantity: 1, price: 450 },
     ],
-    total: 1420 + 150,
+    total: 1110 + 150,
     createdAt: "2026-06-09T10:24:00.000Z",
   },
   {
@@ -252,8 +240,8 @@ export const orders: SeedOrder[] = [
     paymentMethod: "easypaisa",
     paymentStatus: "paid",
     status: "preparing",
-    items: [{ name: "The Mixed Box of 6", quantity: 1, price: 2800 }],
-    total: 2800,
+    items: [{ name: "Mr. Mellow", quantity: 3, price: 450 }],
+    total: 1350,
     createdAt: "2026-06-13T08:05:00.000Z",
   },
   {
@@ -267,10 +255,10 @@ export const orders: SeedOrder[] = [
     paymentStatus: "unpaid",
     status: "pending",
     items: [
-      { name: "Lotus Biscoff", quantity: 2, price: 540 },
-      { name: "Hazelnut White Chocolate", quantity: 1, price: 540 },
+      { name: "Lotus Love", quantity: 2, price: 380 },
+      { name: "BigBlack", quantity: 1, price: 380 },
     ],
-    total: 1620 + 150,
+    total: 1140 + 150,
     createdAt: "2026-06-15T09:15:00.000Z",
   },
 ];

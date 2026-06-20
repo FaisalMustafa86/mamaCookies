@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { api } from "../lib/api";
-import { discountedPrice } from "../lib/format";
+import { asBoxSize, boxPrice, discountedPrice, type BoxSize } from "../lib/format";
 import { BRAND } from "../lib/brand";
 import type {
   Category,
@@ -32,7 +32,21 @@ const CART_KEY = "mamas-cookies:cart:v1";
 function loadCart(): CartItem[] {
   if (typeof localStorage === "undefined") return [];
   try {
-    return JSON.parse(localStorage.getItem(CART_KEY) ?? "[]");
+    const raw = JSON.parse(localStorage.getItem(CART_KEY) ?? "[]");
+    if (!Array.isArray(raw)) return [];
+    // Sanitize tampered/legacy entries: require a string productId and coerce
+    // quantity to a positive integer so the UI can't show negative totals.
+    return raw
+      .filter(
+        (it): it is { productId: unknown; quantity: unknown; size: unknown } =>
+          !!it && typeof it === "object",
+      )
+      .map((it) => ({
+        productId: String(it.productId),
+        quantity: Math.max(1, Math.floor(Number(it.quantity) || 0)),
+        size: asBoxSize(it.size),
+      }))
+      .filter((it) => it.productId && it.productId !== "undefined");
   } catch {
     return [];
   }
@@ -59,9 +73,9 @@ type DataContextValue = {
   cartSubtotal: number;
   deliveryFee: number;
   cartTotal: number;
-  addToCart: (productId: string, quantity?: number) => void;
-  setQuantity: (productId: string, quantity: number) => void;
-  removeFromCart: (productId: string) => void;
+  addToCart: (productId: string, size?: BoxSize, quantity?: number) => void;
+  setQuantity: (productId: string, size: BoxSize, quantity: number) => void;
+  removeFromCart: (productId: string, size: BoxSize) => void;
   clearCart: () => void;
 
   // lookups
@@ -130,30 +144,46 @@ export function DataProvider({ children }: { children: ReactNode }) {
   );
 
   // ---- cart actions ----
-  const addToCart = useCallback((productId: string, quantity = 1) => {
-    setCart((prev) => {
-      const existing = prev.find((i) => i.productId === productId);
-      if (existing) {
-        return prev.map((i) =>
-          i.productId === productId
-            ? { ...i, quantity: i.quantity + quantity }
-            : i,
+  // Lines are identified by productId + size, so the same flavour bought as a
+  // single and as a Box of 8 stays as two independent lines.
+  const addToCart = useCallback(
+    (productId: string, size: BoxSize = 1, quantity = 1) => {
+      setCart((prev) => {
+        const existing = prev.find(
+          (i) => i.productId === productId && i.size === size,
         );
-      }
-      return [...prev, { productId, quantity }];
-    });
-  }, []);
+        if (existing) {
+          return prev.map((i) =>
+            i.productId === productId && i.size === size
+              ? { ...i, quantity: i.quantity + quantity }
+              : i,
+          );
+        }
+        return [...prev, { productId, quantity, size }];
+      });
+    },
+    [],
+  );
 
-  const setQuantity = useCallback((productId: string, quantity: number) => {
+  const setQuantity = useCallback(
+    (productId: string, size: BoxSize, quantity: number) => {
+      setCart((prev) =>
+        quantity <= 0
+          ? prev.filter((i) => !(i.productId === productId && i.size === size))
+          : prev.map((i) =>
+              i.productId === productId && i.size === size
+                ? { ...i, quantity }
+                : i,
+            ),
+      );
+    },
+    [],
+  );
+
+  const removeFromCart = useCallback((productId: string, size: BoxSize) => {
     setCart((prev) =>
-      quantity <= 0
-        ? prev.filter((i) => i.productId !== productId)
-        : prev.map((i) => (i.productId === productId ? { ...i, quantity } : i)),
+      prev.filter((i) => !(i.productId === productId && i.size === size)),
     );
-  }, []);
-
-  const removeFromCart = useCallback((productId: string) => {
-    setCart((prev) => prev.filter((i) => i.productId !== productId));
   }, []);
 
   const clearCart = useCallback(() => setCart([]), []);
@@ -163,7 +193,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const cartSubtotal = cart.reduce((sum, i) => {
     const p = products.find((pr) => pr.id === i.productId);
     if (!p) return sum;
-    return sum + discountedPrice(p.price, p.discountPercent) * i.quantity;
+    const unit = discountedPrice(p.price, p.discountPercent);
+    return sum + boxPrice(unit, i.size) * i.quantity;
   }, 0);
   const deliveryFee =
     cartSubtotal === 0 || cartSubtotal >= BRAND.freeDeliveryOver

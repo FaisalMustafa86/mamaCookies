@@ -55,13 +55,13 @@ export default function About() {
           <Reveal>
             <div className="grid grid-cols-2 gap-4">
               <img
-                src="/images/rack.jpeg"
-                alt="Freshly baked cookies cooling on a rack"
+                src="/images/hero-stall.jpeg"
+                alt="The Mama's Cookies stall lit up at a Twin Cities night market"
                 className="aspect-square w-full rounded-3xl object-cover shadow-soft"
               />
               <img
-                src="/images/bag.jpeg"
-                alt="A cookie in a branded Mama's Cookies paper bag"
+                src="/images/latte.jpeg"
+                alt="A latte in a branded Mama's Cookies cup"
                 className="mt-8 aspect-square w-full rounded-3xl object-cover shadow-soft"
               />
             </div>

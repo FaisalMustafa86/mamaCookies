@@ -12,7 +12,7 @@ const POLICIES: Record<string, Policy> = {
       `Same-day delivery is available for orders placed before our daily cut-off. A flat delivery fee of Rs ${BRAND.deliveryFee} applies, and delivery is free on orders over Rs ${BRAND.freeDeliveryOver.toLocaleString("en-PK")}.`,
       "Pickup is available from our DHA Phase 2 kitchen at no charge — we'll message you when your order is boxed and ready.",
       "Delivery timings depend on order volume and distance; we'll keep you updated over WhatsApp.",
-      "Nationwide shipping across Pakistan is coming soon.",
+      "Nationwide shipping across Pakistan is now available — we carefully pack and courier your cookies anywhere in the country. Shipping times and charges depend on your city; we'll confirm over WhatsApp.",
     ],
   },
   refund: {

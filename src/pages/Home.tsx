@@ -2,6 +2,7 @@ import Hero from "../components/Hero";
 import FeaturedProducts from "../components/FeaturedProducts";
 import HowItWorks from "../components/HowItWorks";
 import OrderTypes from "../components/OrderTypes";
+import BrandVideo from "../components/BrandVideo";
 import PromoSplit from "../components/PromoSplit";
 import Testimonials from "../components/Testimonials";
 
@@ -11,6 +12,7 @@ export default function Home() {
       <Hero />
       <FeaturedProducts />
       <HowItWorks />
+      <BrandVideo />
       <OrderTypes />
 
       <PromoSplit
@@ -25,8 +27,8 @@ export default function Home() {
         ]}
         cta="Explore corporate gifting"
         to="/corporate"
-        image="/images/box-hand.jpeg"
-        imageAlt="A hand holding a Mama's Cookies gift box"
+        image="/images/velvet-hearts.jpeg"
+        imageAlt="Heart-shaped red velvet cookies in branded Mama's Cookies sleeves"
       />
 
       <PromoSplit
@@ -41,8 +43,8 @@ export default function Home() {
         ]}
         cta="Plan your event"
         to="/events"
-        image="/images/assortment.jpeg"
-        imageAlt="An assortment of Mama's Cookies laid out"
+        image="/images/stall-wheel.jpeg"
+        imageAlt="The Mama's Cookies event stall with a spin-the-wheel game at night"
         reverse
         dark
       />

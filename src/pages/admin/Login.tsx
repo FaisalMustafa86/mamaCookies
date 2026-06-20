@@ -103,15 +103,6 @@ export default function Login() {
               {busy ? "Signing in…" : "Log in"}
             </button>
           </form>
-
-          <p className="mt-4 rounded-2xl border border-dashed border-brand-red/30 bg-blush-light/60 p-4 text-xs text-muted">
-            Credentials are set on the server via the{" "}
-            <code className="font-mono text-brand-red">ADMIN_USERNAME</code> /{" "}
-            <code className="font-mono text-brand-red">ADMIN_PASSWORD</code>{" "}
-            environment variables (default{" "}
-            <code className="font-mono text-brand-red">admin</code> /{" "}
-            <code className="font-mono text-brand-red">mama123</code>).
-          </p>
         </div>
 
         <Link

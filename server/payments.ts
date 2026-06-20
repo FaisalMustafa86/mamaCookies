@@ -48,6 +48,35 @@ function easypaisaHash(fields: Record<string, string>): string {
     .digest("hex");
 }
 
+/**
+ * Verify an Easypaisa postback signature before trusting it. In live mode this
+ * callback is attacker-reachable, so a forged "payment succeeded" POST must not
+ * be able to mark an order paid. Checks the amount matches the order total and
+ * the provided HMAC matches one we recompute from the callback fields.
+ */
+function verifyEasypaisaCallback(
+  body: Record<string, unknown>,
+  order: Order,
+): boolean {
+  // Amount must match the order total exactly.
+  const amount = String(body.amount ?? "");
+  if (amount && amount !== order.total.toFixed(2)) return false;
+
+  const provided = String(
+    body.merchantHashedReq ?? body.signature ?? body.hash ?? "",
+  );
+  if (!provided) return false;
+
+  const fields: Record<string, string> = {};
+  for (const [k, v] of Object.entries(body)) {
+    if (k === "merchantHashedReq" || k === "signature" || k === "hash") continue;
+    fields[k] = String(v ?? "");
+  }
+  const expected = easypaisaHash(fields);
+  if (provided.length !== expected.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(provided), Buffer.from(expected));
+}
+
 function easypaisaFormPage(order: Order, baseUrl: string): string {
   const fields: Record<string, string> = {
     storeId: EASYPAISA.storeId,
@@ -120,8 +149,8 @@ function mockGatewayPage(order: Order, baseUrl: string): string {
 // ---- Routes ----------------------------------------------------------------
 
 // Mock gateway page
-paymentsRouter.get("/pay/mock/:id", (req, res) => {
-  const order = getOrder(req.params.id);
+paymentsRouter.get("/pay/mock/:id", async (req, res) => {
+  const order = await getOrder(req.params.id);
   if (!order) {
     res.status(404).send("Order not found");
     return;
@@ -130,22 +159,22 @@ paymentsRouter.get("/pay/mock/:id", (req, res) => {
 });
 
 // Mock gateway completion → mark order, redirect back into the SPA
-paymentsRouter.post("/pay/mock/:id/complete", (req, res) => {
-  const order = getOrder(req.params.id);
+paymentsRouter.post("/pay/mock/:id/complete", async (req, res) => {
+  const order = await getOrder(req.params.id);
   if (!order) {
     res.status(404).send("Order not found");
     return;
   }
   const paid = req.body?.outcome === "paid";
-  updatePaymentStatus(order.id, paid ? "paid" : "failed");
+  await updatePaymentStatus(order.id, paid ? "paid" : "failed");
   res.redirect(
     `${baseUrlFrom(req)}/order/${order.id}?status=${paid ? "paid" : "failed"}`,
   );
 });
 
 // Live Easypaisa redirect page (auto-submits to Easypaisa)
-paymentsRouter.get("/pay/easypaisa/:id", (req, res) => {
-  const order = getOrder(req.params.id);
+paymentsRouter.get("/pay/easypaisa/:id", async (req, res) => {
+  const order = await getOrder(req.params.id);
   if (!order) {
     res.status(404).send("Order not found");
     return;
@@ -154,20 +183,27 @@ paymentsRouter.get("/pay/easypaisa/:id", (req, res) => {
 });
 
 // Live Easypaisa postback handler
-paymentsRouter.post("/api/payments/easypaisa/callback", (req, res) => {
-  // Easypaisa returns orderRefNum + a status/auth token. In a full live
-  // integration you'd verify the response signature here before trusting it.
-  const orderId = req.body?.orderRefNum ?? req.body?.orderId;
-  const ok =
-    req.body?.status === "0000" || // Easypaisa success code
-    req.body?.responseCode === "0000" ||
-    String(req.body?.status ?? "").toLowerCase() === "paid";
-  const order = orderId ? getOrder(String(orderId)) : undefined;
+paymentsRouter.post("/api/payments/easypaisa/callback", async (req, res) => {
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const orderId = body.orderRefNum ?? body.orderId;
+  const order = orderId ? await getOrder(String(orderId)) : undefined;
   if (!order) {
     res.status(404).send("Order not found");
     return;
   }
-  updatePaymentStatus(order.id, ok ? "paid" : "failed");
+
+  // In live mode the callback is attacker-reachable — reject anything that
+  // doesn't carry a valid Easypaisa signature for the right amount.
+  if (PAYMENTS_MODE === "live" && !verifyEasypaisaCallback(body, order)) {
+    res.status(400).send("Invalid payment signature");
+    return;
+  }
+
+  const ok =
+    body.status === "0000" || // Easypaisa success code
+    body.responseCode === "0000" ||
+    String(body.status ?? "").toLowerCase() === "paid";
+  await updatePaymentStatus(order.id, ok ? "paid" : "failed");
   res.redirect(
     `${baseUrlFrom(req)}/order/${order.id}?status=${ok ? "paid" : "failed"}`,
   );

@@ -12,7 +12,12 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useData } from "../data/DataContext";
-import { discountedPrice, formatCurrency } from "../lib/format";
+import {
+  boxLabel,
+  boxPrice,
+  discountedPrice,
+  formatCurrency,
+} from "../lib/format";
 import { BRAND } from "../lib/brand";
 import ProductImage from "../components/ProductImage";
 import type { Fulfilment, PaymentMethod } from "../data/types";
@@ -107,10 +112,11 @@ export default function Cart() {
         {/* line items */}
         <div className="space-y-4 lg:col-span-2">
           {lines.map(({ item, product }) => {
-            const price = discountedPrice(product.price, product.discountPercent);
+            const unit = discountedPrice(product.price, product.discountPercent);
+            const price = boxPrice(unit, item.size);
             return (
               <motion.div
-                key={item.productId}
+                key={`${item.productId}:${item.size}`}
                 layout
                 className="flex gap-4 rounded-3xl border border-brand-ink/10 bg-white p-4 shadow-soft"
               >
@@ -133,10 +139,10 @@ export default function Cart() {
                       >
                         {product.name}
                       </Link>
-                      <p className="text-sm text-muted">{product.unit}</p>
+                      <p className="text-sm text-muted">{boxLabel(item.size)}</p>
                     </div>
                     <button
-                      onClick={() => removeFromCart(item.productId)}
+                      onClick={() => removeFromCart(item.productId, item.size)}
                       aria-label={`Remove ${product.name}`}
                       className="grid h-9 w-9 place-items-center rounded-full text-muted hover:bg-brand-red/10 hover:text-brand-red"
                     >
@@ -148,7 +154,7 @@ export default function Cart() {
                     <div className="flex items-center rounded-full border border-brand-ink/15">
                       <button
                         onClick={() =>
-                          setQuantity(item.productId, item.quantity - 1)
+                          setQuantity(item.productId, item.size, item.quantity - 1)
                         }
                         aria-label="Decrease quantity"
                         className="grid h-9 w-9 place-items-center rounded-full hover:bg-brand-ink/5"
@@ -160,7 +166,7 @@ export default function Cart() {
                       </span>
                       <button
                         onClick={() =>
-                          setQuantity(item.productId, item.quantity + 1)
+                          setQuantity(item.productId, item.size, item.quantity + 1)
                         }
                         aria-label="Increase quantity"
                         className="grid h-9 w-9 place-items-center rounded-full hover:bg-brand-ink/5"

@@ -42,11 +42,19 @@ export default function ProductForm({
     setDraft((d) => ({ ...d, [key]: value }));
   }
 
+  const [error, setError] = useState("");
+
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const price = Number(draft.price);
+    if (!Number.isFinite(price) || price <= 0) {
+      setError("Enter a valid price greater than 0.");
+      return;
+    }
+    setError("");
     onSave({
       ...draft,
-      price: Number(draft.price) || 0,
+      price,
       discountPercent: draft.discountPercent
         ? Number(draft.discountPercent)
         : undefined,
@@ -219,6 +227,12 @@ export default function ProductForm({
               Featured on homepage
             </label>
           </div>
+
+          {error && (
+            <p className="rounded-xl bg-brand-red/10 px-4 py-2.5 text-sm font-medium text-brand-red">
+              {error}
+            </p>
+          )}
 
           <div className="flex gap-3 pt-2">
             <button type="button" onClick={onClose} className="btn-secondary flex-1">

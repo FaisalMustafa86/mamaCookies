@@ -28,7 +28,11 @@ export type Product = {
   sort?: number;
 };
 
-export type CartItem = { productId: string; quantity: number };
+import type { BoxSize } from "../lib/format";
+
+// A cart line is a specific cookie at a specific box size (1 / 4 / 8). The same
+// flavour at two sizes is two distinct lines, keyed by productId + size.
+export type CartItem = { productId: string; quantity: number; size: BoxSize };
 
 export type OrderStatus =
   | "pending"
